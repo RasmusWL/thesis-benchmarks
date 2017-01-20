@@ -1,0 +1,18 @@
+# This gitignore is completely stolen from HIPERFIT/futhark-lambdadays17
+
+runtimes
+runtimes_*/
+input
+speedup.pdf
+runtimes.tex
+
+# Ignore downloaded and extracted Rodinia
+rodinia_3.1
+rodinia_3.1-patched
+rodinia_3.1.tar.bz2
+
+# Ignore Futhark benchmarks
+futhark-benchmarks
+
+# Finpar should not be committed
+finpar
