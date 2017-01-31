@@ -24,7 +24,7 @@ done
 
 bins="${@:$OPTIND}"
 
-# TODO: this is kinda hacky ...
+# TODO: this is kinda hacky ... will probably not survive space in SCRIPTDIR
 if [[ -z $bins ]]; then
     bins="$SCRIPTDIR/$DATATYPE-segreduce-comm.bin $SCRIPTDIR/$DATATYPE-mapinloop.bin"
 fi
@@ -42,7 +42,7 @@ function generate_data () {
 function run_tests () {
     local prog="$1"
     local res_file=$(mktemp /tmp/rasmus-runtest.XXXXXX)
-    cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" &> /dev/null
+    ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" < $infile &> /dev/null
     if [ $? -ne 0 ]; then
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
@@ -57,8 +57,12 @@ if [ ! -f "$infile" ]; then
     futhark-dataset --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
 fi
 
+echo -n "reduce-nocomm on [2^$NUM]$DATATYPE"
+run_tests $SCRIPTDIR/$DATATYPE-reduce-nocomm.bin
+echo ""
+
 echo -n "reduce-comm on [2^$NUM]$DATATYPE"
-echo "" | run_tests $SCRIPTDIR/$DATATYPE-reduce-comm.bin
+run_tests $SCRIPTDIR/$DATATYPE-reduce-comm.bin
 echo ""
 
 # Output header for graph
@@ -73,6 +77,8 @@ echo ""
 
 for i in ${nums}; do
     j=$((NUM-i));
+    infile="/tmp/$DATATYPE-2pow${i}_2pow${j}.dat"
+
     if [ ! -f "$infile" ]; then
         #>&2 echo "generating input $infile"
         generate_data $i $j > "$infile"
@@ -87,7 +93,7 @@ for i in ${nums}; do
         else
             bin="./$bin"
         fi
-        python -c "print('{}\n{}'.format(2**$i, 2**$j))" | run_tests $bin
+        run_tests $bin
     done
 
     echo ""
