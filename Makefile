@@ -21,13 +21,14 @@ endif
 # TODO: if problems with make removing intermediate files, try adding
 # .SECONDARY:
 
-# $@ = Filename of the target of the rule (left of colon)
-# $< = Name of the first prerequisite
+# $@ = the target (left of colon)
+# $* = the % in the target
+# $< = the first prerequisite
+# $^ = the list of all prerequisite
 
 .PHONY: all
 all: futhark-benchmarks results/vanilla.json results/segredomap.json
 
-# The % in the rule (target?) can be used as $* in the commands
 results/%.json: bin-%
 	@mkdir -p results
 	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
