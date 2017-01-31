@@ -11,4 +11,4 @@ vanilla: FUT_OPENCL=../bin-vanilla/futhark-opencl
 vanilla: ../bin-vanilla ${BINS}
 
 %.bin: %.fut
-	@echo $(FUT_OPENCL) -o $@ $<
+	$(FUT_OPENCL) -o $@ $<
