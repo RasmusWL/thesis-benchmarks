@@ -34,11 +34,11 @@ results/%.json: bin-%
 	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
 
 bin-vanilla:
-	@echo "you must provide executables for the vanilla futhark in '$@'"
+	@echo "you must provide binaries for the vanilla futhark in '$@'"
 	exit 1
 
 bin-segredomap:
-	@echo "you must provide executables for the segmented-redomap enabled futhark in '$@'"
+	@echo "you must provide binaries for the segmented-redomap enabled futhark in '$@'"
 	exit 1
 
 futhark-benchmarks:
