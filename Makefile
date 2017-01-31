@@ -12,9 +12,7 @@ BENCHMARKS += futhark-benchmarks/parboil/tpacf/tpacf.fut
 BENCHMARKS += futhark-benchmarks/rodinia/backprop/backprop.fut
 BENCHMARKS += futhark-benchmarks/rodinia/kmeans/kmeans.fut
 
-USE_VERSIONED_CODE =
-
-ifneq (,${USE_VERSIONED_CODE})
+ifdef USE_VERSIONED_CODE
 BENCHMARKS += futhark-benchmarks/accelerate/crystal/crystal.fut
 BENCHMARKS += futhark-benchmarks/accelerate/nbody/nbody.fut
 BENCHMARKS += futhark-benchmarks/parboil/mri-q/mri-q.fut
