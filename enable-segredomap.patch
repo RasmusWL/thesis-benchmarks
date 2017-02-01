@@ -1,0 +1,19 @@
+---
+ src/Futhark/Pass/ExtractKernels.hs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Futhark/Pass/ExtractKernels.hs b/src/Futhark/Pass/ExtractKernels.hs
+index 7816742..dc4ad08 100644
+--- a/src/Futhark/Pass/ExtractKernels.hs
++++ b/src/Futhark/Pass/ExtractKernels.hs
+@@ -626,7 +626,7 @@ versionedCode = False
+ -- Enable if you want to try the new segmented-redomap code. Here be dragons
+ -- (and possibly worse performance).
+ newSegmentedRedomap :: Bool
+-newSegmentedRedomap = False
++newSegmentedRedomap = True
+
+ distributeInnerMap :: Pattern -> MapLoop -> KernelAcc
+                    -> KernelM KernelAcc
+--
+2.7.4
