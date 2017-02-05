@@ -12,3 +12,7 @@ vanilla: ../../bin-vanilla ${BINS}
 
 %.bin: %.fut
 	$(FUT_OPENCL) -o $@ $<
+
+.PHONY: clean
+clean:
+	rm -rf $(BINS) ${FUTFILES:.fut=.c}
