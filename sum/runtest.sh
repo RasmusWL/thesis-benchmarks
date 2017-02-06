@@ -45,6 +45,7 @@ function run_tests () {
 # Handle normal reduce case
 infile="/tmp/$DATATYPE-bin-2pow${NUM}.dat"
 if [ ! -f "$infile" ]; then
+    >&2 echo "Generating data"
     futhark-dataset --binary-no-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
 fi
 
