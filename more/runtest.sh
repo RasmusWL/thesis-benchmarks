@@ -24,25 +24,16 @@ done
 
 bins="${@:$OPTIND}"
 
-# TODO: this is kinda hacky ... will probably not survive space in SCRIPTDIR
-if [[ -z $bins ]]; then
-    bins="$SCRIPTDIR/$DATATYPE-segreduce-comm.bin $SCRIPTDIR/$DATATYPE-mapinloop.bin"
-fi
-
 ################################################################################
 
 echo "Running performance tests for [0-$NUM][$NUM-0]$DATATYPE (each $RUNS_PER_TEST times)"
 
 nums=$(seq 0 ${NUM})
 
-function generate_data () {
-    futhark-dataset --generate=[$(python -c "print(2**$i)")][$(python -c "print(2**$j)")]$DATATYPE
-}
-
 function run_tests () {
     local prog="$1"
     local res_file=$(mktemp /tmp/rasmus-runtest.XXXXXX)
-    ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" < $infile &> /dev/null
+    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" &> /dev/null
     if [ $? -ne 0 ]; then
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
@@ -52,18 +43,24 @@ function run_tests () {
 }
 
 # Handle normal reduce case
-infile="/tmp/$DATATYPE-2pow${NUM}.dat"
+infile="/tmp/$DATATYPE-bin-2pow${NUM}.dat"
 if [ ! -f "$infile" ]; then
-    futhark-dataset --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
+    futhark-dataset --binary-no-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
 fi
 
-echo -n "reduce-nocomm on [2^$NUM]$DATATYPE"
-run_tests $SCRIPTDIR/$DATATYPE-reduce-nocomm.bin
-echo ""
+if [[ -z $bins ]]; then
+    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE"
 
-echo -n "reduce-comm on [2^$NUM]$DATATYPE"
-run_tests $SCRIPTDIR/$DATATYPE-reduce-comm.bin
-echo ""
+    echo -n "reduce-comm on [2^$NUM]$DATATYPE"
+    run_tests $SCRIPTDIR/$DATATYPE-reduce-comm.bin
+    echo ""
+
+    echo -n "reduce-nocomm on [2^$NUM]$DATATYPE"
+    run_tests $SCRIPTDIR/$DATATYPE-reduce-nocomm.bin
+    echo ""
+
+    exit 0
+fi
 
 # Output header for graph
 
@@ -77,7 +74,6 @@ echo ""
 
 for i in ${nums}; do
     j=$((NUM-i));
-    infile="/tmp/$DATATYPE-2pow${i}_2pow${j}.dat"
 
     if [ ! -f "$infile" ]; then
         #>&2 echo "generating input $infile"
@@ -93,6 +89,8 @@ for i in ${nums}; do
         else
             bin="./$bin"
         fi
+
+        header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$i)")][$(python -c "print(2**$j)")]$DATATYPE"
         run_tests $bin
     done
 
