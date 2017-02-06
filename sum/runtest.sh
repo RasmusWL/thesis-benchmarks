@@ -33,7 +33,7 @@ nums=$(seq 0 ${NUM})
 function run_tests () {
     local prog="$1"
     local res_file=$(mktemp /tmp/rasmus-runtest.XXXXXX)
-    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" &> /dev/null
+    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" > /dev/null
     if [ $? -ne 0 ]; then
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
