@@ -17,5 +17,5 @@ futhark-benchmarks
 # Finpar should not be committed
 finpar
 
-more/*.c
-more/*.bin
+sum/*.c
+sum/*.bin
