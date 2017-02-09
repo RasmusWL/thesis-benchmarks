@@ -13,22 +13,32 @@ fi
 RUNS_PER_TEST=5
 NUM=20
 DATATYPE="f32"
+start=
+END=
 
-while getopts 'n:r:' flag; do
+while getopts 'n:r:s:e:' flag; do
   case "${flag}" in
     n) NUM="${OPTARG}" ;;
     r) RUNS_PER_TEST="${OPTARG}" ;;
+    s) start="${OPTARG}" ;;
+    e) END="${OPTARG}" ;;
     *) echo "ERROR: Unexpected option ${flag}"; exit -1 ;;
   esac
 done
 
 bins="${@:$OPTIND}"
 
+if [[ -z $start ]]; then
+    start=0
+fi
+
+if [[ -z $end ]]; then
+    end=$NUM
+fi
+
 ################################################################################
 
 echo "Running performance tests for [0-$NUM][$NUM-0]$DATATYPE (each $RUNS_PER_TEST times)"
-
-nums=$(seq 0 ${NUM})
 
 function run_tests () {
     local prog="$1"
@@ -72,6 +82,7 @@ done
 echo ""
 
 # Go though each combination, and run each of the binaries supplied
+nums=$(seq $start $end)
 
 for i in ${nums}; do
     j=$((NUM-i));
