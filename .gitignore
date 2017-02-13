@@ -19,3 +19,9 @@ finpar
 
 sum/*.c
 sum/*.bin
+
+mss/*.c
+mss/*.bin
+
+intense/*.c
+intense/*.bin
