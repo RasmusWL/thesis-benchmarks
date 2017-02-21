@@ -25,3 +25,6 @@ mss/*.bin
 
 intense/*.c
 intense/*.bin
+
+related-work/moderngpu
+related-work/moderngpu-src/
