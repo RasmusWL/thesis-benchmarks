@@ -8,12 +8,14 @@ popd > /dev/null
 
 CURDIR=$(pwd)
 
-if [ $CURDIR != $(stack path --stack-root)  ]; then
+if [ $CURDIR != $(stack path --project-root)  ]; then
     echo "You're not in the top level of a stack project"
+    exit 1
 fi
 
 if [ ! -f futhark.cabal ]; then
     echo "You're not in the futhark repo"
+    exit 1
 fi
 
 echo "Will generate binaries for vanilla and segredomap, and put them in your current directory"
