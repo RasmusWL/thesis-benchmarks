@@ -16,17 +16,27 @@ DATATYPE="f32"
 start=
 END=
 
-while getopts 'n:r:s:e:' flag; do
+DIMS="2"
+OUT=
+
+while getopts '12n:r:s:e:o:' flag; do
   case "${flag}" in
+    1) DIMS="1" ;;
+    2) DIMS="2" ;;
     n) NUM="${OPTARG}" ;;
     r) RUNS_PER_TEST="${OPTARG}" ;;
     s) start="${OPTARG}" ;;
     e) END="${OPTARG}" ;;
+    o) OUT="${OPTARG}" ;;
     *) echo "ERROR: Unexpected option ${flag}"; exit -1 ;;
   esac
 done
 
 bins="${@:$OPTIND}"
+
+if [[ -z $bins ]]; then
+    echo "You must provide binaries to run!"
+fi
 
 if [[ -z $start ]]; then
     start=0
@@ -43,7 +53,11 @@ echo "Running performance tests for [0-$NUM][$NUM-0]$DATATYPE (each $RUNS_PER_TE
 function run_tests () {
     local prog="$1"
     local res_file=$(mktemp /tmp/rasmus-runtest.XXXXXX)
-    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" > /dev/null
+    local out="/dev/null"
+    if [[ ! -z $OUT ]]; then
+        out="$OUT/$i-$j"
+    fi
+    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" > $out
     if [ $? -ne 0 ]; then
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
@@ -59,16 +73,15 @@ if [ ! -f "$infile" ]; then
     futhark-dataset --binary-no-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
 fi
 
-if [[ -z $bins ]]; then
+if [[ $DIMS -eq "1" ]]; then
+    echo "ONLY ONE DIMENSION!"
     header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE"
 
-    echo -n "reduce-comm on [2^$NUM]$DATATYPE"
-    run_tests $SCRIPTDIR/$DATATYPE-reduce-comm.bin
-    echo ""
-
-    echo -n "reduce-nocomm on [2^$NUM]$DATATYPE"
-    run_tests $SCRIPTDIR/$DATATYPE-reduce-nocomm.bin
-    echo ""
+    for bin in $bins; do
+        echo -n "$bin on [2^$NUM]$DATATYPE"
+        run_tests $bin
+        echo ""
+    done
 
     exit 0
 fi
@@ -94,15 +107,8 @@ for i in ${nums}; do
 
     echo -n "$i \$[2^{$i}][2^{$j}]\$"
 
+    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$i)")][$(python -c "print(2**$j)")]$DATATYPE"
     for bin in $bins; do
-        # Fix path if ./ is not included
-        if [[ "$bin" =~ ^/|^./ ]]; then
-            true
-        else
-            bin="./$bin"
-        fi
-
-        header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$i)")][$(python -c "print(2**$j)")]$DATATYPE"
         run_tests $bin
     done
 
