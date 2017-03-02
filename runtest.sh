@@ -14,7 +14,7 @@ RUNS_PER_TEST=5
 NUM=20
 DATATYPE="f32"
 start=
-END=
+end=
 
 DIMS="2"
 OUT=
@@ -27,7 +27,7 @@ while getopts '12n:r:s:e:o:p:' flag; do
     n) NUM="${OPTARG}" ;;
     r) RUNS_PER_TEST="${OPTARG}" ;;
     s) start="${OPTARG}" ;;
-    e) END="${OPTARG}" ;;
+    e) end="${OPTARG}" ;;
     o) OUT="${OPTARG}" ;;
     p) POW="${OPTARG}" ;;
     *) echo "ERROR: Unexpected option ${flag}"; exit -1 ;;
@@ -50,7 +50,7 @@ fi
 
 ################################################################################
 
-echo "Running performance tests for [0-$NUM][$NUM-0]$DATATYPE (each $RUNS_PER_TEST times)"
+>&2 echo "Running performance tests for [0-$NUM][$NUM-0]$DATATYPE (each $RUNS_PER_TEST times)"
 
 function run_tests () {
     local prog="$1"
