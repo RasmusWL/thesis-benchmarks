@@ -20,13 +20,13 @@ fi
 
 echo "Will generate binaries for vanilla and segredomap, and put them in your current directory"
 
-mkdir -p bin-vanilla
-mkdir -p bin-segredomap
+mkdir -p "$SCRIPTDIR/bin-vanilla"
+mkdir -p "$SCRIPTDIR/bin-segredomap"
 
 git reset --hard
 stack build --fast
-stack install --local-bin-path "$CURDIR/bin-vanilla"
+stack install --local-bin-path "$SCRIPTDIR/bin-vanilla"
 
 git apply "$SCRIPTDIR/enable-segredomap.patch"
 stack build --fast
-stack install --local-bin-path "$CURDIR/bin-segredomap"
+stack install --local-bin-path "$SCRIPTDIR/bin-segredomap"
