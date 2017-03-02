@@ -44,7 +44,7 @@ results/2pow26-segsum-segredomap:
 
 results/2pow26-segsum-vanilla:
 	make -C sum all
-	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 sum/f32-segreduce-comm.vanilla.bin sum/f32-segreduce-nocomm.vanilla.bin sum/f32-loopinmap.vanilla.bin > $@
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 sum/f32-segreduce-comm.vanilla.bin sum/f32-loopinmap.vanilla.bin > $@
 
 bin-vanilla:
 	@echo "you must provide binaries for the vanilla futhark in '$@'"
