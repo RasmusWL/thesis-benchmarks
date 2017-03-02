@@ -27,11 +27,24 @@ endif
 # $^ = the list of all prerequisite
 
 .PHONY: all
-all: futhark-benchmarks results/vanilla.json results/segredomap.json
+all: futhark-benchmarks results/vanilla.json results/segredomap.json \
+	results/2pow26-sum results/2pow26-segsum-segredomap results/2pow26-segsum-vanilla
 
 results/%.json: bin-%
 	@mkdir -p results
 	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
+
+results/2pow26-sum:
+	make -C sum all
+	./runtest.sh -1 -p 2 -r ${RUNS} -n 26 sum/f32-reduce-comm.vanilla.bin sum/f32-reduce-nocomm.vanilla.bin > $@
+
+results/2pow26-segsum-segredomap:
+	make -C sum all
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 sum/f32-segreduce-comm.segredomap.bin sum/f32-segreduce-nocomm.segredomap.bin > $@
+
+results/2pow26-segsum-vanilla:
+	make -C sum all
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 sum/f32-segreduce-comm.vanilla.bin sum/f32-segreduce-nocomm.vanilla.bin sum/f32-loopinmap.vanilla.bin > $@
 
 bin-vanilla:
 	@echo "you must provide binaries for the vanilla futhark in '$@'"
@@ -46,5 +59,8 @@ futhark-benchmarks:
 
 .PHONY: clean
 clean:
+	@echo "this clean function is as good at cleaning up as a teenager.. sorry"
 #	rm -rf futhark-benchmarks
+	make -C sum clean
 	rm -rf results
+
