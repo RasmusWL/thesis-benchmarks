@@ -18,8 +18,9 @@ END=
 
 DIMS="2"
 OUT=
+POW="2" # the power to use
 
-while getopts '12n:r:s:e:o:' flag; do
+while getopts '12n:r:s:e:o:p:' flag; do
   case "${flag}" in
     1) DIMS="1" ;;
     2) DIMS="2" ;;
@@ -28,6 +29,7 @@ while getopts '12n:r:s:e:o:' flag; do
     s) start="${OPTARG}" ;;
     e) END="${OPTARG}" ;;
     o) OUT="${OPTARG}" ;;
+    p) POW="${OPTARG}" ;;
     *) echo "ERROR: Unexpected option ${flag}"; exit -1 ;;
   esac
 done
@@ -67,18 +69,18 @@ function run_tests () {
 }
 
 # Handle normal reduce case
-infile="/tmp/$DATATYPE-bin-2pow${NUM}.dat"
+infile="/tmp/$DATATYPE-bin-${POW}pow${NUM}.dat"
 if [ ! -f "$infile" ]; then
     >&2 echo "Generating data"
-    futhark-dataset --binary-no-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE > "$infile"
+    futhark-dataset --binary-no-header --generate=[$(python -c "print(${POW}**$NUM)")]$DATATYPE > "$infile"
 fi
 
 if [[ $DIMS -eq "1" ]]; then
     echo "ONLY ONE DIMENSION!"
-    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$NUM)")]$DATATYPE"
+    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(${POW}**$NUM)")]$DATATYPE"
 
     for bin in $bins; do
-        echo -n "$bin on [2^$NUM]$DATATYPE"
+        echo -n "$bin on [${POW}^$NUM]$DATATYPE"
         run_tests $bin
         echo ""
     done
@@ -105,9 +107,9 @@ for i in ${nums}; do
         generate_data $i $j > "$infile"
     fi
 
-    echo -n "$i \$[2^{$i}][2^{$j}]\$"
+    echo -n "$i \$[${POW}^{$i}][${POW}^{$j}]\$"
 
-    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(2**$i)")][$(python -c "print(2**$j)")]$DATATYPE"
+    header="futhark-dataset --binary-only-header --generate=[$(python -c "print(${POW}**$i)")][$(python -c "print(${POW}**$j)")]$DATATYPE"
     for bin in $bins; do
         run_tests $bin
     done
