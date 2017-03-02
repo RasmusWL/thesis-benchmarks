@@ -44,6 +44,7 @@ bin-segredomap:
 futhark-benchmarks:
 	git clone --depth 1 https://github.com/HIPERFIT/futhark-benchmarks.git
 
+.PHONY: clean
 clean:
 #	rm -rf futhark-benchmarks
 	rm -rf results
