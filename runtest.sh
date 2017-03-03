@@ -20,7 +20,7 @@ DIMS="2"
 OUT=
 POW="2" # the power to use
 
-while getopts '12n:r:s:e:o:p:' flag; do
+while getopts '12n:r:s:e:o:p:d:' flag; do
   case "${flag}" in
     1) DIMS="1" ;;
     2) DIMS="2" ;;
@@ -30,6 +30,7 @@ while getopts '12n:r:s:e:o:p:' flag; do
     e) end="${OPTARG}" ;;
     o) OUT="${OPTARG}" ;;
     p) POW="${OPTARG}" ;;
+    d) DATATYPE="${OPTARG}" ;;
     *) echo "ERROR: Unexpected option ${flag}"; exit -1 ;;
   esac
 done

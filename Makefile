@@ -57,15 +57,15 @@ results/2pow%-segsum-vanilla:
 
 results/2pow%-mss:
 	make -C mss all
-	./runtest.sh -1 -p 2 -r ${RUNS} -n $* mss/mss.vanilla.bin > $@
+	./runtest.sh -d i32 -1 -p 2 -r ${RUNS} -n $* mss/mss.vanilla.bin > $@
 
 results/2pow%-segmss-segredomap:
 	make -C mss all
-	./runtest.sh -2 -p 2 -r ${RUNS} -n $* mss/segmss.segredomap.bin > $@
+	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.segredomap.bin > $@
 
 results/2pow%-segmss-vanilla:
 	make -C mss all
-	./runtest.sh -2 -p 2 -r ${RUNS} -n $* mss/segmss.vanilla.bin > $@
+	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.vanilla.bin > $@
 
 ################################################################################
 
