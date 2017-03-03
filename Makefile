@@ -28,10 +28,7 @@ endif
 
 .PHONY: all
 all: futhark-benchmarks results/vanilla.json results/segredomap.json \
-	results/2pow26-sum results/2pow26-segsum-segredomap results/2pow26-segsum-vanilla \
-	results/2pow20-sum results/2pow20-segsum-segredomap results/2pow20-segsum-vanilla \
-	results/2pow26-mss results/2pow26-segmss-segredomap results/2pow26-segmss-vanilla \
-	results/2pow20-mss results/2pow20-segmss-segredomap results/2pow20-segmss-vanilla
+	sum-res mss-res
 
 ################################################################################
 
@@ -40,6 +37,17 @@ results/%.json: bin-%
 	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
 
 ################################################################################
+
+.PHONY: sum-res
+sum-res: results/2pow26-sum results/2pow26-segsum-segredomap results/2pow26-segsum-vanilla \
+	results/2pow20-sum results/2pow20-segsum-segredomap results/2pow20-segsum-vanilla
+
+
+sum/%.vanilla.bin: sum/%.fut
+	make -C sum all
+
+sum/%.segredomap.bin: sum/%.fut
+	make -C sum all
 
 results/2pow%-sum: sum/f32-reduce-comm.vanilla.bin sum/f32-reduce-nocomm.vanilla.bin
 	make -C sum all
@@ -54,6 +62,16 @@ results/2pow%-segsum-vanilla: sum/f32-segreduce-comm.vanilla.bin sum/f32-loopinm
 	./runtest.sh -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
 ################################################################################
+
+.PHONY: mss-res
+mss-res: results/2pow26-mss results/2pow26-segmss-segredomap results/2pow26-segmss-vanilla \
+	results/2pow20-mss results/2pow20-segmss-segredomap results/2pow20-segmss-vanilla
+
+mss/%.vanilla.bin: mss/%.fut
+	make -C mss all
+
+mss/%.segredomap.bin: mss/%.fut
+	make -C mss all
 
 results/2pow%-mss: mss/mss.vanilla.bin
 	make -C mss all
