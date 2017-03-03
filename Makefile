@@ -65,7 +65,7 @@ results/2pow%-segmss-segredomap:
 
 results/2pow%-segmss-vanilla:
 	make -C mss all
-	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.vanilla.bin > $@
+	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin > $@
 
 ################################################################################
 
