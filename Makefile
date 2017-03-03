@@ -41,31 +41,31 @@ results/%.json: bin-%
 
 ################################################################################
 
-results/2pow%-sum:
+results/2pow%-sum: sum/f32-reduce-comm.vanilla.bin sum/f32-reduce-nocomm.vanilla.bin
 	make -C sum all
-	./runtest.sh -1 -p 2 -r ${RUNS} -n $* sum/f32-reduce-comm.vanilla.bin sum/f32-reduce-nocomm.vanilla.bin > $@
+	./runtest.sh -1 -p 2 -r ${RUNS} -n $* $^ > $@
 
-results/2pow%-segsum-segredomap:
+results/2pow%-segsum-segredomap: sum/f32-segreduce-comm.segredomap.bin sum/f32-segreduce-nocomm.segredomap.bin
 	make -C sum all
-	./runtest.sh -2 -p 2 -r ${RUNS} -n $* sum/f32-segreduce-comm.segredomap.bin sum/f32-segreduce-nocomm.segredomap.bin > $@
+	./runtest.sh -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
-results/2pow%-segsum-vanilla:
+results/2pow%-segsum-vanilla: sum/f32-segreduce-comm.vanilla.bin sum/f32-loopinmap.vanilla.bin
 	make -C sum all
-	./runtest.sh -2 -p 2 -r ${RUNS} -n $* sum/f32-segreduce-comm.vanilla.bin sum/f32-loopinmap.vanilla.bin > $@
+	./runtest.sh -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
 ################################################################################
 
-results/2pow%-mss:
+results/2pow%-mss: mss/mss.vanilla.bin
 	make -C mss all
-	./runtest.sh -d i32 -1 -p 2 -r ${RUNS} -n $* mss/mss.vanilla.bin > $@
+	./runtest.sh -d i32 -1 -p 2 -r ${RUNS} -n $* $^  > $@
 
-results/2pow%-segmss-segredomap:
+results/2pow%-segmss-segredomap: mss/segmss.segredomap.bin
 	make -C mss all
-	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.segredomap.bin > $@
+	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
-results/2pow%-segmss-vanilla:
+results/2pow%-segmss-vanilla: mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin
 	make -C mss all
-	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin > $@
+	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
 ################################################################################
 
