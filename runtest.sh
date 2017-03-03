@@ -64,7 +64,7 @@ function run_tests () {
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
     fi
-    awk '{ total += $1 } END { printf " %.2f", total/NR }' "$res_file"
+    cat $res_file | $SCRIPTDIR/mean-and-std.py
     rm "$res_file"
 }
 
@@ -92,7 +92,7 @@ fi
 
 echo -n "row label"
 for bin in $bins; do
-    echo -n " $(basename $bin)"
+    echo -n " $(basename $bin) $(basename $bin)-std"
 done
 echo ""
 
