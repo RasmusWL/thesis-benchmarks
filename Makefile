@@ -39,7 +39,8 @@ bench-res: futhark-benchmarks results/vanilla.json results/segredomap.json \
 
 results/%.json: bin-%
 	@mkdir -p results
-	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
+# ignore errors when running the benchmark, we just want to json output
+	-bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
 
 bin-vanilla:
 	@echo "you must provide binaries for the vanilla futhark in '$@'"
