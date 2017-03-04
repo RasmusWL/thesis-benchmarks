@@ -22,6 +22,8 @@ echo "Will generate binaries for vanilla and segredomap, and put them in your cu
 
 mkdir -p "$SCRIPTDIR/bin-vanilla"
 mkdir -p "$SCRIPTDIR/bin-segredomap"
+mkdir -p "$SCRIPTDIR/bin-versioned"
+mkdir -p "$SCRIPTDIR/bin-versionedANDsegredomap"
 
 git reset --hard
 stack build --fast
@@ -30,3 +32,12 @@ stack install --local-bin-path "$SCRIPTDIR/bin-vanilla"
 git apply "$SCRIPTDIR/enable-segredomap.patch"
 stack build --fast
 stack install --local-bin-path "$SCRIPTDIR/bin-segredomap"
+
+git reset --hard
+git apply "$SCRIPTDIR/enable-versionedCode.patch"
+stack build --fast
+stack install --local-bin-path "$SCRIPTDIR/bin-versioned"
+
+git apply "$SCRIPTDIR/enable-segredomap.patch"
+stack build --fast
+stack install --local-bin-path "$SCRIPTDIR/bin-versionedANDsegredomap"

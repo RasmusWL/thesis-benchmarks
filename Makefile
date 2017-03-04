@@ -12,6 +12,8 @@ BENCHMARKS += futhark-benchmarks/parboil/tpacf/tpacf.fut
 BENCHMARKS += futhark-benchmarks/rodinia/backprop/backprop.fut
 BENCHMARKS += futhark-benchmarks/rodinia/kmeans/kmeans.fut
 
+USE_VERSIONED_CODE=YES
+
 ifdef USE_VERSIONED_CODE
 BENCHMARKS += futhark-benchmarks/accelerate/crystal/crystal.fut
 BENCHMARKS += futhark-benchmarks/accelerate/nbody/nbody.fut
@@ -27,14 +29,37 @@ endif
 # $^ = the list of all prerequisite
 
 .PHONY: all
-all: futhark-benchmarks results/vanilla.json results/segredomap.json \
-	sum-res mss-res
+all: bench-res sum-res mss-res
 
 ################################################################################
+
+.PHONY: bench-res
+bench-res: futhark-benchmarks results/vanilla.json results/segredomap.json \
+	results/versioned.json results/versionedANDsegredomap.json
 
 results/%.json: bin-%
 	@mkdir -p results
 	bin-$*/futhark-bench --compiler=bin-$*/futhark-opencl -r 10 --json=$@ ${BENCHMARKS}
+
+bin-vanilla:
+	@echo "you must provide binaries for the vanilla futhark in '$@'"
+	exit 1
+
+bin-segredomap:
+	@echo "you must provide binaries for the segmented-redomap enabled futhark in '$@'"
+	exit 1
+
+bin-versioned:
+	@echo "you must provide binaries for the versioned code futhark in '$@'"
+	exit 1
+
+bin-versionedANDsegredomap:
+	@echo "you must provide binaries for the versionedANDsegredomap code futhark in '$@'"
+	exit 1
+
+futhark-benchmarks:
+	git clone --depth 1 https://github.com/HIPERFIT/futhark-benchmarks.git
+
 
 ################################################################################
 
@@ -86,17 +111,6 @@ results/2pow%-segmss-vanilla: mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin
 	./runtest.sh -d i32 -2 -p 2 -r ${RUNS} -n $* $^ > $@
 
 ################################################################################
-
-bin-vanilla:
-	@echo "you must provide binaries for the vanilla futhark in '$@'"
-	exit 1
-
-bin-segredomap:
-	@echo "you must provide binaries for the segmented-redomap enabled futhark in '$@'"
-	exit 1
-
-futhark-benchmarks:
-	git clone --depth 1 https://github.com/HIPERFIT/futhark-benchmarks.git
 
 .PHONY: clean
 clean:

@@ -1,0 +1,25 @@
+From 6da9bb2dd77c9a13ced0f475fd86a53959035e54 Mon Sep 17 00:00:00 2001
+From: Rasmus Wriedt Larsen <rasmuswriedtlarsen@gmail.com>
+Date: Sat, 4 Mar 2017 17:22:17 +0100
+Subject: [PATCH] enable versionedCode
+
+---
+ src/Futhark/Pass/ExtractKernels.hs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Futhark/Pass/ExtractKernels.hs b/src/Futhark/Pass/ExtractKernels.hs
+index 17cbf91..b6105d7 100644
+--- a/src/Futhark/Pass/ExtractKernels.hs
++++ b/src/Futhark/Pass/ExtractKernels.hs
+@@ -634,7 +634,7 @@ containsNestedParallelism lam =
+ -- Enable if you want the cool new versioned code.  Beware: may be
+ -- slower in practice.  Caveat emptor (and you are the emptor).
+ versionedCode :: Bool
+-versionedCode = False
++versionedCode = True
+ 
+ -- Enable if you want to try the new segmented-redomap code. Here be dragons
+ -- (and possibly worse performance).
+-- 
+2.7.4
+
