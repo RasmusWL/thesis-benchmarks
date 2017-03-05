@@ -84,6 +84,20 @@ void TestCsrReduce(int count, int segSize, int numIterations,
         SegReduceCsrPreprocess<T>(count, csrDevice->get(), numRows, supportEmpty,
                 &preprocessData, context);
 
+        // Do a warmup run!
+        if(TestTypeNormal == testType)
+            SegReduceCsr(dataDevice->get(), csrDevice->get(), count, numRows,
+                         supportEmpty, resultsDevice->get(), (T)0, mgpu::plus<T>(),
+                         context);
+        else if(TestTypeIndirect == testType)
+            IndirectReduceCsr(dataDevice->get(), csrDevice->get(),
+                              sourcesDevice->get(), count, numRows, supportEmpty,
+                              resultsDevice->get(), (T)0, mgpu::plus<T>(), context);
+        else
+            SegReduceApply(*preprocessData, dataDevice->get(), (T)0,
+                           mgpu::plus<T>(), resultsDevice->get(), context);
+
+
         context.Start();
         for(int it = 0; it < numIterations; ++it) {
                 if(TestTypeNormal == testType)
