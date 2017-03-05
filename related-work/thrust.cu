@@ -66,7 +66,7 @@ int test(thrust::device_vector<int>& array, int R, int C)
   cudaEventSynchronize(stopEvent);
   cudaEventElapsedTime(&ms, startEvent, stopEvent);
 
-  printf("%15.0f", (ms / NUM_REPS) * 1e3 );
+  printf("%15.3f\n", (ms / NUM_REPS) * 1e3 );
 
   return 0;
 }
