@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# when storing the output from computations in subfolders (out-????) we can use
+# the following command to compare the results. It really only does a sha1sum,
+# so for reduction over floats, it will not be very good :D
+#
+# sha1sum out-*/* | sort | uniq --check-chars 40 | cut -d ' ' -f 3 | cut -d '/' -f 1 | sort | uniq
+
 pushd `dirname $0` > /dev/null
 SCRIPTDIR=`pwd`
 popd > /dev/null
