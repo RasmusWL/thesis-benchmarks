@@ -43,6 +43,8 @@ BINS := moderngpu
 .PHONY: all
 all: $(BINS)
 
+thrust: thrust.cu
+	$(NVCC) $(NVCCFLAGS) -o $@ $<
 
 moderngpu: moderngpu.cu $(MODERNGPUPATH)
 	$(NVCC) $(NVCCFLAGS) -o $@ $< $(MODERNGPUPATH)/src/mgpucontext.cu $(MODERNGPUPATH)/src/mgpuutil.cpp
