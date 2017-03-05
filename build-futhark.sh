@@ -25,7 +25,7 @@ mkdir -p "$SCRIPTDIR/bin-segredomap"
 mkdir -p "$SCRIPTDIR/bin-versioned"
 mkdir -p "$SCRIPTDIR/bin-versionedANDsegredomap"
 
-git reset --hard fa70f82cd27088ab8a854ceefc030a9ef3c53908
+git reset --hard dd2d6651fd9ae9de6fcfe408ed02d54e4976b07e
 
 git reset --hard
 stack build --fast
