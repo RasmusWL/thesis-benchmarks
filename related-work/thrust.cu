@@ -29,17 +29,11 @@ const int NUM_REPS = 10;
 cudaEvent_t startEvent, stopEvent;
 float ms;
 
-int test(int R, int C)
+int test(thrust::device_vector<int>& array, int R, int C)
 {
   // int R = 5;     // number of rows
   // int C = 8;     // number of columns
-  thrust::default_random_engine rng;
-  thrust::uniform_int_distribution<int> dist(10, 99);
 
-  // initialize data
-  thrust::device_vector<int> array(R * C);
-  for (size_t i = 0; i < array.size(); i++)
-    array[i] = dist(rng);
 
   // allocate storage for row sums and indices
   thrust::device_vector<int> row_sums(R);
@@ -77,15 +71,25 @@ int test(int R, int C)
   return 0;
 }
 
-void dothatbench(int THEPOWER) {
+void dothatbench(int THEPOWER, int start) {
 
-        int start=0;
+//        int start=0;
         int end=THEPOWER;
 
         int total_elems = 1 << THEPOWER;
 
         printf("Benchmarking Thrust %i.%i.%i TotalElems=%i\n",
                THRUST_MAJOR_VERSION, THRUST_MINOR_VERSION, THRUST_SUBMINOR_VERSION, total_elems);
+
+        thrust::default_random_engine rng;
+        thrust::uniform_int_distribution<int> dist(10, 99);
+
+        // initialize data
+        thrust::device_vector<int> array(total_elems);
+        for (size_t i = 0; i < array.size(); i++)
+            array[i] = dist(rng);
+
+        printf("initialized array\n");
 
         for(int powy=start; powy<=end; powy++) {
             int powx = THEPOWER-powy;
@@ -97,7 +101,7 @@ void dothatbench(int THEPOWER) {
             snprintf(buf, 16, "2^%i 2^%i", powy, powx);
             printf("%15s", buf);
 
-            test(num_segments, segment_size);
+            test(array, num_segments, segment_size);
         }
 }
 
@@ -106,8 +110,8 @@ int main(int argc, char** argv) {
     cudaEventCreate(&startEvent);
     cudaEventCreate(&stopEvent);
 
-    dothatbench(20);
-    dothatbench(26);
+    dothatbench(20, 0);
+    dothatbench(26, 0);
 
     cudaEventDestroy(startEvent);
     cudaEventDestroy(stopEvent);
