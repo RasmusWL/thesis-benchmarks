@@ -20,10 +20,5 @@ fun redOp((bx, lx, rx, tx): (i32,i32,i32,i32))
 fun mapOp (x: i32): (i32,i32,i32,i32) =
   ( max x 0, max x 0, max x 0, x)
 
--- old version, is currently not compiled to a segmented reduction
---fun main(xss: [m][n]i32): [m]i32 =
--- map (\xs -> let (x, _, _, _) = reduce redOp (0,0,0,0) (map mapOp xs) in x) xss
-
--- this version returns all arrays, and is currently compiled to a segmented reduction
-fun main(xss: [m][n]i32): ([m]i32, [m]i32, [m]i32, [m]i32) =
-  unzip (map (\xs -> reduce redOp (0,0,0,0) (map mapOp xs)) xss)
+fun main(xss: [m][n]i32): [m]i32 =
+  map (\xs -> let (x, _, _, _) = reduce redOp (0,0,0,0) (map mapOp xs) in x) xss
