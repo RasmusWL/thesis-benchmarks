@@ -22,11 +22,13 @@ POW="2" # the power to use
 
 # Can use something like -g '#1 GTX' to select the second GTX device!
 GPUSELECTOR=
+debug=
 
-while getopts '12n:r:s:e:o:p:d:g:' flag; do
+while getopts '12Qn:r:s:e:o:p:d:g:' flag; do
   case "${flag}" in
     1) DIMS="1" ;;
     2) DIMS="2" ;;
+    Q) debug="-s" ;;
     n) NUM="${OPTARG}" ;;
     r) RUNS_PER_TEST="${OPTARG}" ;;
     s) start="${OPTARG}" ;;
@@ -69,7 +71,7 @@ function run_tests () {
     if [[ ! -z $OUT ]]; then
         out="$OUT/$i-$j"
     fi
-    $header | cat - $infile | ${OPTIRUN} "$prog" -r "$RUNS_PER_TEST" -t "$res_file" "$deviceflag $GPUSELECTOR" > $out
+    $header | cat - $infile | ${OPTIRUN} "$prog" $debug -r "$RUNS_PER_TEST" -t "$res_file" "$deviceflag $GPUSELECTOR" > $out
     if [ $? -ne 0 ]; then
         >&2 echo -e "\nFailure when executing '$prog'"
         exit -1
