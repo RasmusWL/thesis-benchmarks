@@ -123,7 +123,7 @@ void TestCsrReduce(int count, int segSize, int numIterations,
 
         for(int i = 0; i < numRows; ++i) {
                 if(resultsRef[i] != resultsHost[i]) {
-                        printf("REDUCTION ERROR ON SEGMENT %d\n", i);
+                        printf("REDUCTION ERROR ON SEGMENT %d:\n", i);
                         exit(0);
                 }
         }
@@ -171,7 +171,7 @@ int main(int argc, char** argv) {
         ContextPtr context = CreateCudaDevice(argc, argv, true);
 
         bool supportEmpty = false;
-        TestType testType = TestTypeNormal;
+        TestType testType = TestTypePreprocess;
 
         BenchmarkSegReduce<float>(testType, supportEmpty, *context, 20);
         BenchmarkSegReduce<float>(testType, supportEmpty, *context, 26);
