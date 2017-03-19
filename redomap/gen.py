@@ -36,7 +36,7 @@ def multituple_segreduce(comm, n):
 
     foo = []
     for i in range(n):
-        foo.append('x+'+str(i)+'.0f32')
+        foo.append('x+'+str(i+1)+'.0f32')
     f_body = wraps(foo)
 
     op = '+' if comm else '-'
@@ -89,7 +89,7 @@ def multituple_loopinmap(n):
 
     foo = []
     for i in range(n):
-        foo.append('x+'+str(i)+'.0f32')
+        foo.append('x+'+str(i+1)+'.0f32')
     f_body = wraps(foo)
 
     op = '+'
@@ -134,7 +134,7 @@ def multituple_reduce(comm, n):
 
     foo = []
     for i in range(n):
-        foo.append('x+'+str(i)+'.0f32')
+        foo.append('x+'+str(i+1)+'.0f32')
     f_body = wraps(foo)
 
     op = '+' if comm else '-'
