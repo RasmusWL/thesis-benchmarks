@@ -128,8 +128,8 @@ redomap-res: ${REDOMAP_RESULTS_20} ${REDOMAP_RESULTS_26}
 # @echo ${REDOMAP_RESULTS_20}
 # @echo ${REDOMAP_RESULTS_26}
 
-# redomap/%.vanilla.bin: redomap/%.fut
-# 	make -C redomap all
+redomap/%.vanilla.bin: redomap/%.fut
+	make -C redomap all
 
 redomap/%.segredomap.bin: redomap/%.fut
 	make -C redomap all
@@ -144,11 +144,12 @@ results/redomap/26/multi-seg-%: redomap/multi-seg-%.segredomap.bin
 	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
 
 
-results/redomap/20/multi-loop-%: redomap/multi-loop-%.segredomap.bin
+# Because these are redomaps, the vanilla implementation will use loop in map
+results/redomap/20/multi-loop-%: redomap/multi-seg-%.vanilla.bin
 	@mkdir -p results/redomap/20
 	./runtest.sh -2 -p 2 -r ${RUNS} -n 20 $^ > $@
 
-results/redomap/26/multi-loop-%: redomap/multi-loop-%.segredomap.bin
+results/redomap/26/multi-loop-%: redomap/multi-seg-%.vanilla.bin
 	@mkdir -p results/redomap/26
 	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
 
