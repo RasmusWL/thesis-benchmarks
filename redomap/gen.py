@@ -12,7 +12,89 @@ def wrap(base, n=1):
         res = "(" + res + ")"
     return res
 
+################################################################################
+
 # Intensive
+
+intensive_segreduce_fmt = """
+import "futlib/math"
+
+fun redop (x:f32) (y:f32) : f32 =
+  {redop_body}
+
+entry main (xss : [m][n]f32) : [m]f32 =
+  map (\\xs -> {reduce} redop 0.0f32 xs) xss
+"""
+
+def intensive__(fmt, comm, n):
+    op = '+'
+
+    redop_body = 'let foo = 0'
+    for i in range(n):
+        redop_body += 'let xx = x*x\n'
+        redop_body += 'let x = f32.sqrt(xx)\n'
+        redop_body += '\n'
+
+    redop_body += 'in ' + 'x' + op + 'y'
+
+    reduce = 'reduceComm' if comm else 'reduce'
+
+    return fmt.format(**locals())
+
+intensive_loopinmap_fmt = """
+import "futlib/math"
+
+fun redop (x:f32) (y:f32) : f32 =
+  {redop_body}
+
+entry main (xss : [m][n]f32) : [m]f32 =
+  if m < 64
+  then replicate (m) 0.0f32
+  else
+  map (\\xs ->
+         loop (acc = 0.0f32) = for i < n do
+              redop acc xs[i]
+         in acc
+      ) xss
+"""
+
+
+
+intensive_reduce_fmt = """
+import "futlib/math"
+
+fun redop (x:f32) (y:f32) : f32 =
+  {redop_body}
+
+entry main (xs : [n]f32) : f32 =
+  {reduce} redop 0.0f32 xs
+
+"""
+
+def intensive_segreduce(comm, n):
+    return intensive__(intensive_segreduce_fmt, comm, n)
+
+def intensive_loopinmap(n):
+    return intensive__(intensive_loopinmap_fmt, True, n)
+
+def intensive_reduce(comm, n):
+    return intensive__(intensive_reduce_fmt, True, n)
+
+for n in range(0, 8):
+    for comm in (True, False):
+        name = 'intensive-seg-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
+        with open(name, 'w') as outfile:
+            outfile.write( intensive_segreduce(comm, n) )
+
+        name = 'intensive-loop-' + str(n) + '.fut'
+        with open(name, 'w') as outfile:
+            outfile.write( intensive_loopinmap(n) )
+
+        name = 'intensive-1d-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
+        with open(name, 'w') as outfile:
+            outfile.write( intensive_reduce(comm, n) )
+
+################################################################################
 
 # Map-part output
 
@@ -156,9 +238,6 @@ def multituple_reduce(comm, n):
 
     return multituple_reduce_fmt.format(**locals())
 
-# Multituple input
-
-
 for n in range(1, 8):
     for comm in (True, False):
         name = 'multi-seg-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
@@ -174,3 +253,5 @@ for n in range(1, 8):
         name = 'multi-1d-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
         with open(name, 'w') as outfile:
             outfile.write( multituple_reduce(comm, n) )
+
+# Multituple input

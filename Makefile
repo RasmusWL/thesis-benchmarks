@@ -115,7 +115,7 @@ results/2pow%-segmss-vanilla: mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin
 
 REDOMAP_FUTFILES := ${wildcard redomap/*.fut}
 
-REDOMAP_FUTFILES_LOOP := ${wildcard redomap/*-seg-*.fut}
+REDOMAP_FUTFILES_LOOP := ${wildcard redomap/multi-seg-*.fut}
 REDOMAP_FUTFILES_LOOP := ${subst -seg-,-loop-,${REDOMAP_FUTFILES_LOOP}}
 
 REDOMAP_FUTFILES += ${REDOMAP_FUTFILES_LOOP}
@@ -148,7 +148,6 @@ results/redomap/26/multi-seg-%: redomap/multi-seg-%.segredomap.bin
 	@mkdir -p results/redomap/26
 	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
 
-
 # Because these are redomaps, the vanilla implementation will use loop in map
 results/redomap/20/multi-loop-%: redomap/multi-seg-%.vanilla.bin
 	@mkdir -p results/redomap/20
@@ -164,6 +163,33 @@ results/redomap/20/multi-1d-%: redomap/multi-1d-%.segredomap.bin
 	./runtest.sh -1 -p 2 -r ${RUNS} -n 20 $^ > $@
 
 results/redomap/26/multi-1d-%: redomap/multi-1d-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -1 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+########################################
+
+results/redomap/20/intensive-seg-%: redomap/intensive-seg-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/intensive-seg-%: redomap/intensive-seg-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+# Because these are redomaps, the vanilla implementation will use loop in map
+results/redomap/20/intensive-loop-%: redomap/intensive-loop-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/intensive-loop-%: redomap/intensive-loop-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+results/redomap/20/intensive-1d-%: redomap/intensive-1d-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -1 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/intensive-1d-%: redomap/intensive-1d-%.segredomap.bin
 	@mkdir -p results/redomap/26
 	./runtest.sh -1 -p 2 -r ${RUNS} -n 26 $^ > $@
 
