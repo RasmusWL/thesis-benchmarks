@@ -13,7 +13,7 @@ fun mapOp (x: i32): (i32,i32,i32,i32) =
   ( max x 0, max x 0, max x 0, x)
 
 entry main(xss: [m][n]i32): [m]i32 =
-  if m <= 64
+  if m < 64
   then replicate (m) 0
   else
   map (\(xs : [n]i32) ->
