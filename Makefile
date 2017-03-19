@@ -115,7 +115,7 @@ results/2pow%-segmss-vanilla: mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin
 
 REDOMAP_FUTFILES := ${wildcard redomap/*.fut}
 REDOMAP_FILES := ${REDOMAP_FUTFILES:.fut=}
-REDOMAP_FILES := ${REDOMAP_FILES# :redomap/%=%}
+REDOMAP_FILES := ${REDOMAP_FILES:redomap/%=%}
 
 REDOMAP_RESULTS_20 := $(addprefix results/redomap/20/,${REDOMAP_FILES})
 REDOMAP_RESULTS_26 := $(addprefix results/redomap/26/,${REDOMAP_FILES})
