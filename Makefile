@@ -113,6 +113,58 @@ results/2pow%-segmss-vanilla: mss/segmss.vanilla.bin mss/loopinmap.vanilla.bin
 
 ################################################################################
 
+REDOMAP_FUTFILES := ${wildcard redomap/*.fut}
+REDOMAP_FILES := ${REDOMAP_FUTFILES:.fut=}
+REDOMAP_FILES := ${REDOMAP_FILES# :redomap/%=%}
+
+REDOMAP_RESULTS_20 := $(addprefix results/redomap/20/,${REDOMAP_FILES})
+REDOMAP_RESULTS_26 := $(addprefix results/redomap/26/,${REDOMAP_FILES})
+
+.PHONY: redomap-res
+redomap-res: # ${REDOMAP_RESULTS_20} ${REDOMAP_RESULTS_26}
+	@echo ${REDOMAP_FUTFILES}
+	@echo
+	@echo ${REDOMAP_RESULTS_20}
+	@echo ${REDOMAP_RESULTS_26}
+
+# redomap/%.vanilla.bin: redomap/%.fut
+# 	make -C redomap all
+
+redomap/%.segredomap.bin: redomap/%.fut
+	make -C redomap all
+
+
+results/redomap/20/multi-seg-%: redomap/multi-seg-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/multi-seg-%: redomap/multi-seg-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+
+results/redomap/20/multi-loop-%: redomap/multi-loop-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/multi-loop-%: redomap/multi-loop-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -2 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+
+results/redomap/20/multi-1d-%: redomap/multi-1d-%.segredomap.bin
+	@mkdir -p results/redomap/20
+	./runtest.sh -1 -p 2 -r ${RUNS} -n 20 $^ > $@
+
+results/redomap/26/multi-1d-%: redomap/multi-1d-%.segredomap.bin
+	@mkdir -p results/redomap/26
+	./runtest.sh -1 -p 2 -r ${RUNS} -n 26 $^ > $@
+
+
+
+
+################################################################################
+
 .PHONY: clean
 clean:
 	@echo "this clean function is as good at cleaning up as a teenager.. sorry"
