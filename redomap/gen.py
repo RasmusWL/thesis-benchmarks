@@ -164,9 +164,13 @@ for n in range(1, 8):
         name = 'multi-seg-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
         with open(name, 'w') as outfile:
             outfile.write( multituple_segreduce(comm, n) )
-        name = 'multi-loop-' + str(n) + '.fut'
-        with open(name, 'w') as outfile:
-            outfile.write( multituple_loopinmap(n) )
+
+        # Bug prevents us from getting more than this
+        if n < 5:
+            name = 'multi-loop-' + str(n) + '.fut'
+            with open(name, 'w') as outfile:
+                outfile.write( multituple_loopinmap(n) )
+
         name = 'multi-1d-' + ('comm' if comm else 'nocomm') + '-' + str(n) + '.fut'
         with open(name, 'w') as outfile:
             outfile.write( multituple_reduce(comm, n) )
