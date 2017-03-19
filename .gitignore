@@ -30,3 +30,5 @@ related-work/moderngpu
 related-work/moderngpu-src/
 
 redomap/*.fut
+redomap/*.bin
+redomap/*.c
