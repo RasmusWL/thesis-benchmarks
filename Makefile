@@ -121,11 +121,12 @@ REDOMAP_RESULTS_20 := $(addprefix results/redomap/20/,${REDOMAP_FILES})
 REDOMAP_RESULTS_26 := $(addprefix results/redomap/26/,${REDOMAP_FILES})
 
 .PHONY: redomap-res
-redomap-res: # ${REDOMAP_RESULTS_20} ${REDOMAP_RESULTS_26}
-	@echo ${REDOMAP_FUTFILES}
-	@echo
-	@echo ${REDOMAP_RESULTS_20}
-	@echo ${REDOMAP_RESULTS_26}
+redomap-res: ${REDOMAP_RESULTS_20} ${REDOMAP_RESULTS_26}
+
+# @echo ${REDOMAP_FUTFILES}
+# @echo
+# @echo ${REDOMAP_RESULTS_20}
+# @echo ${REDOMAP_RESULTS_26}
 
 # redomap/%.vanilla.bin: redomap/%.fut
 # 	make -C redomap all
