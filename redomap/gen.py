@@ -29,7 +29,9 @@ entry main (xss : [m][n]f32) : [m]f32 =
 def intensive__(fmt, comm, n):
     op = '+'
 
-    redop_body = 'let foo = 0'
+    redop_body = ''
+    if n == 0:
+        redop_body += 'let foo = 0\n'
     for i in range(n):
         redop_body += 'let xx = x*x\n'
         redop_body += 'let x = f32.sqrt(xx)\n'
@@ -78,7 +80,7 @@ def intensive_loopinmap(n):
     return intensive__(intensive_loopinmap_fmt, True, n)
 
 def intensive_reduce(comm, n):
-    return intensive__(intensive_reduce_fmt, True, n)
+    return intensive__(intensive_reduce_fmt, comm, n)
 
 for n in range(0, 8):
     for comm in (True, False):
