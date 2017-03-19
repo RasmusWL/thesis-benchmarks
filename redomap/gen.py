@@ -68,6 +68,9 @@ fun redop ({red_in1}) ({red_in2}) : {red_out} =
   {redop_body}
 
 entry main (xss : [m][n]f32) : {main_out} =
+  if m < 64
+  then replicate (m) {ne}
+  else
   map (\\xs ->
          loop ({acc} = {ne}) = for i < n do
               redop {acc} (f xs[i])
