@@ -26,7 +26,7 @@ fun redop ({red_in1}) ({red_in2}) : {red_out} =
   {redop_body}
 
 entry main (xss : [m][n]f32) : {main_out} =
-  unzip( map (\\xs -> {reduce} redop {ne} (map f xs)) xss )
+  {unzip} ( map (\\xs -> {reduce} redop {ne} (map f xs)) xss )
 """
 
 def multituple_segreduce(comm, n):
@@ -54,6 +54,8 @@ def multituple_segreduce(comm, n):
 
     reduce = 'reduceComm' if comm else 'reduce'
 
+    unzip = 'unzip' if n > 1 else ''
+
     ne = wrap('0.0f32', n)
 
     return multituple_segreduce_fmt.format(**locals())
@@ -68,7 +70,7 @@ fun redop ({red_in1}) ({red_in2}) : {red_out} =
   {redop_body}
 
 entry main (xss : [m][n]f32) : {main_out} =
-  unzip(
+  {unzip} (
   if m < 64
   then replicate (m) {ne}
   else
@@ -105,6 +107,8 @@ def multituple_loopinmap(n):
     red_in2 = ','.join(in2)
     redop_body = wraps(red_body)
     acc = wraps(acc_)
+
+    unzip = 'unzip' if n > 1 else ''
 
     ne = wrap('0.0f32', n)
 
