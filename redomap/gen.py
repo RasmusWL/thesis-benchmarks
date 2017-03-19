@@ -27,7 +27,7 @@ entry main (xss : [m][n]f32) : [m]f32 =
 """
 
 def intensive__(fmt, comm, n):
-    op = '+'
+    op = '+' if comm else '-'
 
     redop_body = ''
     if n == 0:
